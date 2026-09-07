@@ -7,8 +7,7 @@ import {
   Copy,
   Check,
   Sparkles,
-GithubIcon,
-  Linkedin,
+  GithubIcon,
   CheckCircle2,
   Phone,
   GraduationCap,
@@ -16,6 +15,24 @@ GithubIcon,
   MessageSquare
 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
+
+// Custom inline SVG for LinkedIn to avoid missing export errors from lucide-react
+const LinkedinIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="w-3.5 h-3.5 text-cyan-400"
+    {...props}
+  >
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+    <rect x="2" y="9" width="4" height="12" />
+    <circle cx="4" cy="4" r="2" />
+  </svg>
+);
 
 interface ContactSectionProps {
   isDark: boolean;
@@ -125,7 +142,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
 
             {/* Quick Contact Card */}
             <div className={`p-6 sm:p-8 rounded-3xl border backdrop-blur-xl transition-all ${
-              isDark ? 'bg-slate-900/50 border-cyan-500/25 shadow-[0_0_30px_rgba(6,182,212,0.12)]' : 'bg-white/85 border-cyan-300/70 shadow-sm'
+              isDark ? 'bg-slate-900/50 border-cyan-500/25 shadow-[0_0_30px_rgba(6,182,212,0.12)]' : 'bg-white/85 border-cyan-300/70 shadow-xs'
             }`}>
               <h3 className={`font-display text-xl font-bold mb-4 ${
                 isDark ? 'text-white' : 'text-slate-900'
@@ -262,7 +279,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
                         : 'bg-white border-cyan-200 text-slate-700 hover:bg-cyan-50'
                     }`}
                   >
-                    <Github className="w-3.5 h-3.5 text-cyan-400" />
+                    <GithubIcon className="w-3.5 h-3.5 text-cyan-400" />
                     <span>GitHub</span>
                   </a>
 
@@ -276,7 +293,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
                         : 'bg-white border-cyan-200 text-slate-700 hover:bg-cyan-50'
                     }`}
                   >
-                    <Linkedin className="w-3.5 h-3.5 text-cyan-400" />
+                    <LinkedinIcon />
                     <span>LinkedIn</span>
                   </a>
                 </div>
