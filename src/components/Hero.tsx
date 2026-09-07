@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   ArrowRight,
   MapPin,
@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 import { useLanguage } from '../context/LanguageContext';
-import { TRANSLATIONS } from '../constants/translations';
+import { TRANSLATIONS } from '../data/translations';
 import defaultPortraitImg from '../assets/yosef_begashaw.jpg';
 
 interface HeroProps {
@@ -18,14 +18,14 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ isDark }) => {
-  const { lang } = useLanguage();
-  const t = TRANSLATIONS[lang].hero;
-
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [copiedPhone, setCopiedPhone] = useState(false);
   const [userPhoto, setUserPhoto] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { lang, isAmharic } = useLanguage();
+  const t = TRANSLATIONS[lang];
 
-  // Load custom user photo from localStorage if available
+  // Load custom user photo from localStorage if set
   useEffect(() => {
     try {
       const savedPhoto = localStorage.getItem('yosef_profile_photo');
@@ -47,6 +47,25 @@ export const Hero: React.FC<HeroProps> = ({ isDark }) => {
     navigator.clipboard.writeText(PERSONAL_INFO.rawPhone);
     setCopiedPhone(true);
     setTimeout(() => setCopiedPhone(false), 2200);
+  };
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const result = event.target?.result as string;
+        if (result) {
+          setUserPhoto(result);
+          try {
+            localStorage.setItem('yosef_profile_photo', result);
+          } catch (err) {
+            console.warn('Could not cache photo to localStorage', err);
+          }
+        }
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const scrollToSection = (id: string) => {
@@ -82,17 +101,17 @@ export const Hero: React.FC<HeroProps> = ({ isDark }) => {
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]"></span>
               </span>
               <span className="font-mono text-[11px] sm:text-xs tracking-wider uppercase">
-                {t.badge}
+                {t.hero.badge}
               </span>
             </div>
 
             {/* Main Greeting & Name */}
             <h1 className="font-display font-extrabold tracking-tight text-4xl sm:text-5xl lg:text-6xl mb-3">
               <span className={isDark ? 'text-white' : 'text-slate-900'}>
-                {t.greeting}{' '}
+                {t.hero.greeting}{' '}
               </span>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-cyan-200 drop-shadow-[0_0_25px_rgba(6,182,212,0.3)]">
-                {t.name || PERSONAL_INFO.name}
+                {isAmharic ? t.hero.name : PERSONAL_INFO.name}
               </span>
             </h1>
 
@@ -101,31 +120,36 @@ export const Hero: React.FC<HeroProps> = ({ isDark }) => {
               isDark ? 'text-cyan-300/90' : 'text-cyan-800'
             }`}>
               <span className="text-cyan-400 font-mono text-base">&gt;</span>
-              <span>{t.headline}</span>
+              <span>{t.hero.headline}</span>
             </h2>
 
             {/* Bio */}
             <p className={`text-base sm:text-lg leading-relaxed mb-6 max-w-2xl ${
               isDark ? 'text-slate-300/90' : 'text-slate-700'
             }`}>
-              {t.bioLong || PERSONAL_INFO.bioLong}
+              {t.hero.bio}
             </p>
 
             {/* Location & Academic Origin Pill */}
             <div className="flex flex-wrap items-center gap-y-2 gap-x-3 text-xs sm:text-sm mb-7 font-mono">
               <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-300">
                 <GraduationCap className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                <span>{t.institution}</span>
+                <span>{t.hero.universityTag}</span>
               </div>
 
               <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-300">
                 <MapPin className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                <span>{t.location}</span>
+                <span>{t.hero.originTag}</span>
               </div>
 
               <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/25 text-emerald-400">
                 <Award className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                <span>{t.certificate}</span>
+                <span>{t.hero.rewardTag}</span>
+              </div>
+
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/25 text-amber-300">
+                <span>∑</span>
+                <span>{t.hero.mathTag}</span>
               </div>
             </div>
 
@@ -137,7 +161,7 @@ export const Hero: React.FC<HeroProps> = ({ isDark }) => {
                 onClick={() => scrollToSection('projects')}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-slate-950 bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 shadow-[0_0_25px_rgba(6,182,212,0.4)] hover:shadow-[0_0_35px_rgba(6,182,212,0.6)] active:scale-98 transition-all cursor-pointer font-display"
               >
-                <span>{t.viewProjects}</span>
+                <span>{t.hero.viewProjects}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
 
@@ -148,7 +172,7 @@ export const Hero: React.FC<HeroProps> = ({ isDark }) => {
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-semibold text-sm border backdrop-blur-md bg-cyan-500/15 border-cyan-400/60 text-cyan-200 hover:bg-cyan-500/25 hover:shadow-[0_0_20px_rgba(6,182,212,0.35)] transition-all cursor-pointer"
               >
                 <Phone className="w-4 h-4 text-cyan-400" />
-                <span>{t.callBtn}: {PERSONAL_INFO.rawPhone}</span>
+                <span>{t.hero.callDirect}</span>
               </a>
 
               {/* Academic Journey */}
@@ -162,7 +186,7 @@ export const Hero: React.FC<HeroProps> = ({ isDark }) => {
                 }`}
               >
                 <GraduationCap className="w-4 h-4 text-cyan-400" />
-                <span>{t.educationalJourney}</span>
+                <span>{t.hero.eduJourney}</span>
               </button>
             </div>
 
@@ -182,12 +206,12 @@ export const Hero: React.FC<HeroProps> = ({ isDark }) => {
                 {copiedPhone ? (
                   <>
                     <Check className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>{t.phoneCopied}: 0942572629</span>
+                    <span>{t.hero.copiedPhone}</span>
                   </>
                 ) : (
                   <>
                     <Phone className="w-3.5 h-3.5 text-cyan-400" />
-                    <span>{t.copyPhone} (0942572629)</span>
+                    <span>{t.hero.copyPhone}</span>
                   </>
                 )}
               </button>
@@ -206,7 +230,7 @@ export const Hero: React.FC<HeroProps> = ({ isDark }) => {
                 {copiedEmail ? (
                   <>
                     <Check className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>{t.emailCopied}</span>
+                    <span>{t.hero.copiedEmail}</span>
                   </>
                 ) : (
                   <>
@@ -219,29 +243,41 @@ export const Hero: React.FC<HeroProps> = ({ isDark }) => {
 
           </div>
 
-          {/* Right Column: Interactive Hover Portrait Frame */}
+          {/* Right Column: Clean Visual Portrait with Hand Cursor & Professional Interactive Glow */}
           <div className="lg:col-span-5 flex justify-center lg:justify-end">
             <div className="relative w-full max-w-sm sm:max-w-md group cursor-pointer">
 
-              {/* Outer decorative glowing cyan halo */}
-              <div className="absolute -inset-2 rounded-3xl bg-gradient-to-tr from-cyan-400/30 via-teal-400/20 to-cyan-300/30 blur-2xl -z-10 group-hover:from-cyan-400/60 group-hover:to-teal-300/50 group-hover:blur-3xl transition-all duration-500" />
+              {/* Outer decorative glowing cyan halo that amplifies on hover */}
+              <div className="absolute -inset-2 rounded-3xl bg-gradient-to-tr from-cyan-400/30 via-teal-400/20 to-cyan-300/30 blur-2xl -z-10 group-hover:blur-3xl group-hover:from-cyan-400/50 group-hover:to-teal-300/40 transition-all duration-500" />
 
-              {/* Main Container */}
-              <div className={`p-3 sm:p-4 rounded-3xl border backdrop-blur-xl shadow-2xl transform transition-all duration-500 group-hover:-translate-y-2 group-hover:scale-[1.02] ${
+              {/* Main Clean Card Container */}
+              <div className={`p-3 sm:p-4 rounded-3xl border backdrop-blur-xl shadow-2xl transition-all duration-500 ${
                 isDark
-                  ? 'bg-slate-900/70 border-cyan-500/30 shadow-[0_0_35px_rgba(6,182,212,0.18)] group-hover:border-cyan-400 group-hover:shadow-[0_0_50px_rgba(6,182,212,0.4)]'
-                  : 'bg-white/85 border-cyan-300/80 shadow-[0_0_35px_rgba(6,182,212,0.12)] group-hover:border-cyan-400 group-hover:shadow-[0_0_40px_rgba(6,182,212,0.3)]'
+                  ? 'bg-slate-900/70 border-cyan-500/30 group-hover:border-cyan-400/70 shadow-[0_0_35px_rgba(6,182,212,0.18)] group-hover:shadow-[0_0_55px_rgba(6,182,212,0.35)]'
+                  : 'bg-white/85 border-cyan-300/80 group-hover:border-cyan-400 shadow-[0_0_35px_rgba(6,182,212,0.12)] group-hover:shadow-[0_0_45px_rgba(6,182,212,0.25)]'
               }`}>
 
-                {/* Portrait Frame */}
-                <div className="relative aspect-square rounded-2xl overflow-hidden bg-slate-950 border-2 border-cyan-500/40 group-hover:border-cyan-400 transition-colors duration-500 shadow-inner">
+                {/* Pure Photo Frame */}
+                <div className="relative aspect-square rounded-2xl overflow-hidden bg-slate-950 border-2 border-cyan-500/30 group-hover:border-cyan-400 transition-all duration-500 shadow-inner cursor-pointer">
                   <img
                     src={userPhoto || defaultPortraitImg}
-                    alt="Personal Portrait"
-                    className="w-full h-full object-cover object-center transform transition-transform duration-700 ease-out group-hover:scale-108"
+                    alt={isAmharic ? t.hero.name : PERSONAL_INFO.name}
+                    className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700 ease-out cursor-pointer"
                     referrerPolicy="no-referrer"
                   />
+
+                  {/* Subtle Professional Hover Overlay with Ambient Glow */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-cyan-950/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                 </div>
+
+                {/* Hidden Input for direct background file loading if needed */}
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handlePhotoUpload}
+                  accept="image/*"
+                  className="hidden"
+                />
 
               </div>
             </div>

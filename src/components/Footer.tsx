@@ -1,61 +1,35 @@
 import React from 'react';
-import { ArrowUp, Mail, Heart, Phone } from 'lucide-react';
+import { ArrowUp, Mail, Phone } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
-
-// Inline SVGs for brand icons removed from recent lucide-react versions
-const GithubIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="w-4 h-4"
-    {...props}
-  >
-    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-    <path d="M9 18c-4.51 2-5-2-7-2" />
-  </svg>
-);
-
-const LinkedinIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="w-4 h-4"
-    {...props}
-  >
-    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-    <rect x="2" y="9" width="4" height="12" />
-    <circle cx="4" cy="4" r="2" />
-  </svg>
-);
-
-const TwitterIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="w-4 h-4"
-    {...props}
-  >
-    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
-  </svg>
-);
+import { TRANSLATIONS } from '../data/translations';
+import { useLanguage } from '../context/LanguageContext';
 
 interface FooterProps {
   isDark: boolean;
 }
 
+const GithubIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+  </svg>
+);
+
+const LinkedinIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+  </svg>
+);
+
+const TwitterIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+  </svg>
+);
+
 export const Footer: React.FC<FooterProps> = ({ isDark }) => {
+  const { lang, isAmharic } = useLanguage();
+  const t = TRANSLATIONS[lang];
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -71,14 +45,14 @@ export const Footer: React.FC<FooterProps> = ({ isDark }) => {
           {/* Brand */}
           <div className="flex items-center gap-3 text-center md:text-left">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-400 via-teal-300 to-cyan-500 text-slate-950 font-display font-black flex items-center justify-center text-sm shadow-[0_0_18px_rgba(6,182,212,0.4)] ring-1 ring-cyan-300/50">
-              YB
+              {isAmharic ? 'ዮበ' : 'YB'}
             </div>
             <div>
               <div className={`font-display font-bold text-base ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                {PERSONAL_INFO.name}
+                {isAmharic ? 'ዮሴፍ በጋሻው' : PERSONAL_INFO.name}
               </div>
               <div className="text-xs font-mono text-cyan-400/80">
-                4th-Year Computer Science Senior · Debre Berhan University
+                {isAmharic ? 'የደብረ ብርሃን ዩኒቨርሲቲ 4ኛ ዓመት የኮምፒውተር ሳይንስ ተማሪ' : '4th-Year Computer Science Senior · Debre Berhan University'}
               </div>
             </div>
           </div>
@@ -92,11 +66,10 @@ export const Footer: React.FC<FooterProps> = ({ isDark }) => {
                   ? 'border-cyan-500/30 bg-slate-900/60 text-cyan-300 hover:text-white hover:border-cyan-400/70 hover:bg-cyan-500/20 hover:shadow-[0_0_15px_rgba(6,182,212,0.3)]'
                   : 'border-cyan-200 bg-white text-slate-700 hover:text-cyan-600 shadow-2xs'
               }`}
-              title="Call Direct Phone"
+              title="Call 0942572629"
             >
               <Phone className="w-4 h-4" />
             </a>
-
             <a
               href={PERSONAL_INFO.github}
               target="_blank"
@@ -108,7 +81,7 @@ export const Footer: React.FC<FooterProps> = ({ isDark }) => {
               }`}
               aria-label="GitHub"
             >
-              <GithubIcon />
+              <GithubIcon className="w-4 h-4" />
             </a>
 
             <a
@@ -122,7 +95,7 @@ export const Footer: React.FC<FooterProps> = ({ isDark }) => {
               }`}
               aria-label="LinkedIn"
             >
-              <LinkedinIcon />
+              <LinkedinIcon className="w-4 h-4" />
             </a>
 
             <a
@@ -136,7 +109,7 @@ export const Footer: React.FC<FooterProps> = ({ isDark }) => {
               }`}
               aria-label="Twitter"
             >
-              <TwitterIcon />
+              <TwitterIcon className="w-4 h-4" />
             </a>
 
             <a
@@ -162,7 +135,7 @@ export const Footer: React.FC<FooterProps> = ({ isDark }) => {
                 : 'border-cyan-300 bg-white text-slate-700 hover:bg-cyan-50 shadow-2xs'
             }`}
           >
-            <span>Back to top</span>
+            <span>{t.footer.backToTop}</span>
             <ArrowUp className="w-3.5 h-3.5 text-cyan-400" />
           </button>
         </div>
@@ -170,11 +143,11 @@ export const Footer: React.FC<FooterProps> = ({ isDark }) => {
         {/* Bottom Credits & Copyright */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-slate-400 gap-4">
           <div>
-            © {new Date().getFullYear()} {PERSONAL_INFO.name}. All rights reserved.
+            © {new Date().getFullYear()} {isAmharic ? 'ዮሴፍ በጋሻው' : PERSONAL_INFO.name}. {t.footer.rights}
           </div>
           <div className="flex items-center gap-2 text-cyan-400/90">
             <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
-            <span>Debre Berhan &amp; North Shoa, Ethiopia (UTC+3)</span>
+            <span>{isAmharic ? 'ደብረ ብርሃን እና ሰሜን ሸዋ፣ ኢትዮጵያ (UTC+3)' : 'Debre Berhan & North Shoa, Ethiopia (UTC+3)'}</span>
           </div>
         </div>
 

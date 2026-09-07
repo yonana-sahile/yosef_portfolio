@@ -5,13 +5,13 @@ import {
   Video,
   Palette,
   Calculator,
-  ShieldCheck,
-  Zap,
   Award,
   Cpu,
   CheckCircle2
 } from 'lucide-react';
 import { SKILL_CATEGORIES } from '../data/portfolioData';
+import { AMHARIC_SKILL_CATEGORIES, TRANSLATIONS } from '../data/translations';
+import { useLanguage } from '../context/LanguageContext';
 
 interface SkillsMatrixProps {
   isDark: boolean;
@@ -19,6 +19,10 @@ interface SkillsMatrixProps {
 
 export const SkillsMatrix: React.FC<SkillsMatrixProps> = ({ isDark }) => {
   const [activeCategoryIndex, setActiveCategoryIndex] = useState<number>(0);
+  const { lang, isAmharic } = useLanguage();
+  const t = TRANSLATIONS[lang];
+
+  const skillCategories = isAmharic ? AMHARIC_SKILL_CATEGORIES : SKILL_CATEGORIES;
 
   const getCategoryIcon = (index: number) => {
     switch (index) {
@@ -40,27 +44,35 @@ export const SkillsMatrix: React.FC<SkillsMatrixProps> = ({ isDark }) => {
   const engineeringPillars = [
     {
       icon: <Smartphone className="w-5 h-5 text-cyan-400" />,
-      title: "Cross-Platform Mobile Mastery",
-      description: "Crafting fluid mobile experiences with Flutter and React Native featuring sub-60fps frame rates and offline caching."
+      title: isAmharic ? "ሁለንተናዊ የሞባይል መተግበሪያዎች" : "Cross-Platform Mobile Mastery",
+      description: isAmharic
+        ? "በFlutter እና React Native ለስላሳ እና ፈጣን የሆኑ፣ ከመስመር ውጭም የሚሰሩ የሞባይል አፖችን መስራት።"
+        : "Crafting fluid mobile experiences with Flutter and React Native featuring sub-60fps frame rates and offline caching."
     },
     {
       icon: <Globe className="w-5 h-5 text-teal-400" />,
-      title: "Modern Web Engineering",
-      description: "Building responsive React and Next.js applications with strict TypeScript type contracts and robust Node APIs."
+      title: isAmharic ? "ዘመናዊ የዌብ ምህንድስና" : "Modern Web Engineering",
+      description: isAmharic
+        ? "በReact፣ Next.js እና TypeScript አስተማማኝና ማራኪ የሆኑ የድረ-ገጽ አፕሊኬሽኖችን እና የNode.js አገልጋዮችን መገንባት።"
+        : "Building responsive React and Next.js applications with strict TypeScript type contracts and robust Node APIs."
     },
     {
       icon: <Award className="w-5 h-5 text-emerald-400" />,
-      title: "Certified Multimedia Storytelling",
-      description: "Awarded official Reward Certificate for commercial video editing, dynamic motion graphics, and sound mastering."
+      title: isAmharic ? "ተሸላሚ የቪዲዮና መልቲሚዲያ ስራ" : "Certified Multimedia Storytelling",
+      description: isAmharic
+        ? "በቪዲዮ ኤዲቲንግ፣ በሞሽን ግራፊክስ እና በድምፅ ማስተካከያ ስራዎች ልዩ የማበረታቻ የምስክር ወረቀት የተሸለመ።"
+        : "Awarded official Reward Certificate for commercial video editing, dynamic motion graphics, and sound mastering."
     },
     {
       icon: <Calculator className="w-5 h-5 text-amber-400" />,
-      title: "Mathematics Diploma Foundations",
-      description: "Applying discrete math, algorithmic graph theory, and mathematical logic directly to solve complex code challenges."
+      title: isAmharic ? "የሂሳብ ዲፕሎማ ጥልቅ መሰረት" : "Mathematics Diploma Foundations",
+      description: isAmharic
+        ? "የተጠናከረ የሂሳብ እውቀትን ውስብስብ የሆኑ የኮዲንግ እና የአልጎሪዝም ችግሮችን ለመፍታት በተግባር ማዋል ላይ የተካነ።"
+        : "Applying discrete math, algorithmic graph theory, and mathematical logic directly to solve complex code challenges."
     }
   ];
 
-  const currentCategory = SKILL_CATEGORIES[activeCategoryIndex] || SKILL_CATEGORIES[0];
+  const currentCategory = skillCategories[activeCategoryIndex] || skillCategories[0];
 
   return (
     <section id="skills" className="py-20 relative scroll-mt-16">
@@ -70,23 +82,23 @@ export const SkillsMatrix: React.FC<SkillsMatrixProps> = ({ isDark }) => {
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.15)] mb-3">
             <Cpu className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Technical &amp; Creative Proficiencies</span>
+            <span>{t.skills.badge}</span>
           </div>
           <h2 className={`font-display text-3xl sm:text-4xl font-extrabold tracking-tight ${
             isDark ? 'text-white' : 'text-slate-900'
           }`}>
-            Skills &amp; Technical Capabilities
+            {t.skills.title}
           </h2>
           <p className={`mt-2 text-base sm:text-lg ${
             isDark ? 'text-slate-300' : 'text-slate-600'
           }`}>
-            Comprehensive skill set combining 4th-Year Computer Science training, a Mathematics Diploma, and Certified Multimedia expertise.
+            {t.skills.subtitle}
           </p>
         </div>
 
         {/* Categories Tab Selector */}
         <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-12">
-          {SKILL_CATEGORIES.map((cat, idx) => {
+          {skillCategories.map((cat, idx) => {
             const isActive = activeCategoryIndex === idx;
             return (
               <button
@@ -188,3 +200,4 @@ export const SkillsMatrix: React.FC<SkillsMatrixProps> = ({ isDark }) => {
     </section>
   );
 };
+

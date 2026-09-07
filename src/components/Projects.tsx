@@ -1,39 +1,53 @@
 import React, { useState } from 'react';
-import { ExternalLink, ArrowUpRight, Sparkles, Filter, Layers } from 'lucide-react';
+import { ExternalLink, ArrowUpRight, Sparkles, Layers } from 'lucide-react';
 import { Project } from '../types';
 import { PROJECTS } from '../data/portfolioData';
+import { AMHARIC_PROJECTS, TRANSLATIONS } from '../data/translations';
+import { useLanguage } from '../context/LanguageContext';
 import { ProjectModal } from './ProjectModal';
-
-// Standalone SVG component for GitHub icon
-const GithubIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="w-3.5 h-3.5"
-    {...props}
-  >
-    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-    <path d="M9 18c-4.51 2-5-2-7-2" />
-  </svg>
-);
 
 interface ProjectsProps {
   isDark: boolean;
 }
 
+const GithubIcon = ({ className = "w-3.5 h-3.5" }: { className?: string }) => (
+  <svg
+    className={className}
+    fill="currentColor"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+  >
+    <path
+      fillRule="evenodd"
+      d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
+
 export const Projects: React.FC<ProjectsProps> = ({ isDark }) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const { lang, isAmharic } = useLanguage();
+  const t = TRANSLATIONS[lang];
+  const [selectedCategoryKey, setSelectedCategoryKey] = useState<string>('all');
   const [activeProject, setActiveProject] = useState<Project | null>(null);
 
-  const categories = ['All', 'Mobile Apps', 'Web Apps', 'Video & Graphics', 'Design & UI'];
+  const rawProjects = isAmharic ? AMHARIC_PROJECTS : PROJECTS;
 
-  const filteredProjects = selectedCategory === 'All'
-    ? PROJECTS
-    : PROJECTS.filter((p) => p.category === selectedCategory);
+  const categoryOptions = [
+    { key: 'all', label: t.projects.filterAll },
+    { key: 'mobile', label: t.projects.filterMobile, matchCategoryEn: 'Mobile Apps', matchCategoryAm: 'የሞባይል አፖች' },
+    { key: 'web', label: t.projects.filterWeb, matchCategoryEn: 'Web Apps', matchCategoryAm: 'የዌብ አፖች' },
+    { key: 'video', label: t.projects.filterVideo, matchCategoryEn: 'Video & Graphics', matchCategoryAm: 'ቪዲዮና ግራፊክስ' },
+    { key: 'design', label: t.projects.filterDesign, matchCategoryEn: 'Design & UI', matchCategoryAm: 'ዲዛይንና UI' },
+  ];
+
+  const filteredProjects = selectedCategoryKey === 'all'
+    ? rawProjects
+    : rawProjects.filter((p) => {
+        const catOpt = categoryOptions.find(c => c.key === selectedCategoryKey);
+        if (!catOpt) return true;
+        return p.category === catOpt.matchCategoryEn || p.category === catOpt.matchCategoryAm;
+      });
 
   return (
     <section id="projects" className="py-20 relative scroll-mt-16">
@@ -44,29 +58,29 @@ export const Projects: React.FC<ProjectsProps> = ({ isDark }) => {
           <div>
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.15)] mb-3">
               <Layers className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Selected Works &amp; Creations</span>
+              <span>{t.projects.badge}</span>
             </div>
             <h2 className={`font-display text-3xl sm:text-4xl font-extrabold tracking-tight ${
               isDark ? 'text-white' : 'text-slate-900'
             }`}>
-              Featured Projects &amp; Creative Portfolio
+              {t.projects.title}
             </h2>
             <p className={`mt-2 text-base sm:text-lg max-w-2xl ${
               isDark ? 'text-slate-300' : 'text-slate-600'
             }`}>
-              Real-world mobile applications, modern web portals, certified video editing reels, and brand design packages.
+              {t.projects.subtitle}
             </p>
           </div>
 
           {/* Filter Pills */}
           <div className="flex flex-wrap gap-2">
-            {categories.map((cat) => {
-              const isSelected = selectedCategory === cat;
+            {categoryOptions.map((opt) => {
+              const isSelected = selectedCategoryKey === opt.key;
               return (
                 <button
-                  key={cat}
-                  id={`filter-cat-${cat.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}
-                  onClick={() => setSelectedCategory(cat)}
+                  key={opt.key}
+                  id={`filter-cat-${opt.key}`}
+                  onClick={() => setSelectedCategoryKey(opt.key)}
                   className={`px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer backdrop-blur-md ${
                     isSelected
                       ? 'bg-gradient-to-r from-cyan-400 to-teal-400 text-slate-950 font-bold shadow-[0_0_15px_rgba(6,182,212,0.4)]'
@@ -75,7 +89,7 @@ export const Projects: React.FC<ProjectsProps> = ({ isDark }) => {
                       : 'bg-white/80 border border-cyan-200 text-slate-600 hover:text-cyan-700 hover:border-cyan-300 shadow-2xs'
                   }`}
                 >
-                  {cat}
+                  {opt.label}
                 </button>
               );
             })}
@@ -130,7 +144,7 @@ export const Projects: React.FC<ProjectsProps> = ({ isDark }) => {
                       className="p-2 rounded-xl backdrop-blur-md bg-slate-950/80 text-cyan-300 hover:text-white hover:bg-cyan-500/20 border border-cyan-500/30 transition-all shadow-sm"
                       title="GitHub Source"
                     >
-                      <GithubIcon />
+                      <GithubIcon className="w-3.5 h-3.5" />
                     </a>
                   )}
                   {project.liveUrl && (
@@ -207,7 +221,7 @@ export const Projects: React.FC<ProjectsProps> = ({ isDark }) => {
                       : 'border-cyan-300 bg-white/80 text-slate-700 hover:bg-cyan-50 hover:border-cyan-400'
                   }`}
                 >
-                  <span>Read Architecture Deep Dive</span>
+                  <span>{t.projects.readCaseStudy}</span>
                   <ArrowUpRight className="w-4 h-4 text-cyan-400" />
                 </button>
               </div>

@@ -13,12 +13,20 @@ import {
   Phone
 } from 'lucide-react';
 import { EXPERIENCES, JOURNEY_MILESTONES, PERSONAL_INFO } from '../data/portfolioData';
+import { AMHARIC_EXPERIENCES, AMHARIC_JOURNEY_MILESTONES, TRANSLATIONS } from '../data/translations';
+import { useLanguage } from '../context/LanguageContext';
 
 interface ExperienceTimelineProps {
   isDark: boolean;
 }
 
 export const ExperienceTimeline: React.FC<ExperienceTimelineProps> = ({ isDark }) => {
+  const { lang, isAmharic } = useLanguage();
+  const t = TRANSLATIONS[lang];
+
+  const experiences = isAmharic ? AMHARIC_EXPERIENCES : EXPERIENCES;
+  const journeyMilestones = isAmharic ? AMHARIC_JOURNEY_MILESTONES : JOURNEY_MILESTONES;
+
   return (
     <div className="relative">
       {/* Experience Section */}
@@ -29,23 +37,23 @@ export const ExperienceTimeline: React.FC<ExperienceTimelineProps> = ({ isDark }
           <div className="text-center max-w-2xl mx-auto mb-16">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.15)] mb-3">
               <Briefcase className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Technical &amp; Creative Experience</span>
+              <span>{t.experience.badge}</span>
             </div>
             <h2 className={`font-display text-3xl sm:text-4xl font-extrabold tracking-tight ${
               isDark ? 'text-white' : 'text-slate-900'
             }`}>
-              Practical Experience &amp; Impact
+              {t.experience.title}
             </h2>
             <p className={`mt-2 text-base sm:text-lg ${
               isDark ? 'text-slate-300' : 'text-slate-600'
             }`}>
-              Hands-on engineering across mobile apps, full-stack web platforms, and certified video/graphic production.
+              {t.experience.subtitle}
             </p>
           </div>
 
           {/* Timeline Container */}
           <div className="relative border-l-2 border-cyan-500/30 ml-4 sm:ml-8 space-y-12">
-            {EXPERIENCES.map((exp) => (
+            {experiences.map((exp) => (
               <div key={exp.id} className="relative pl-6 sm:pl-10">
 
                 {/* Timeline Marker Dot */}
@@ -138,23 +146,23 @@ export const ExperienceTimeline: React.FC<ExperienceTimelineProps> = ({ isDark }
           <div className="text-center max-w-2xl mx-auto mb-16">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.15)] mb-3">
               <GraduationCap className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Academic &amp; Educational Milestones</span>
+              <span>{t.journey.badge}</span>
             </div>
             <h2 className={`font-display text-3xl sm:text-4xl font-extrabold tracking-tight ${
               isDark ? 'text-white' : 'text-slate-900'
             }`}>
-              Yosef Begashaw's Academic Journey
+              {t.journey.title}
             </h2>
             <p className={`mt-2 text-base sm:text-lg ${
               isDark ? 'text-slate-300' : 'text-slate-600'
             }`}>
-              From foundational primary school in North Shoa, Menz Lalo Midir to a Mathematics Diploma and 4th-Year Computer Science at Debre Berhan University.
+              {t.journey.subtitle}
             </p>
           </div>
 
           {/* Stepped Journey Cards */}
           <div className="space-y-6">
-            {JOURNEY_MILESTONES.map((milestone, idx) => {
+            {journeyMilestones.map((milestone) => {
               const getIcon = () => {
                 switch (milestone.iconType) {
                   case 'primary':
@@ -266,10 +274,12 @@ export const ExperienceTimeline: React.FC<ExperienceTimelineProps> = ({ isDark }
           }`}>
             <div className="relative z-10 max-w-xl mx-auto">
               <h3 className={`font-display text-2xl font-bold mb-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                Let's Build Impactful Software Together
+                {isAmharic ? 'አብረን ተፅዕኖ ፈጣሪ ስራዎችን እንስራ' : "Let's Build Impactful Software Together"}
               </h3>
               <p className={`text-sm mb-6 ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
-                Looking for a dedicated mobile/web developer or multimedia designer? Reach out to Yosef Begashaw directly.
+                {isAmharic
+                  ? 'ትጉ እና የተካነ የሞባይልና ዌብ አልሚ፣ ወይም የመልቲሚዲያ ዲዛይነር ይፈልጋሉ? ዮሴፍ በጋሻውን በቀጥታ ያግኙ።'
+                  : 'Looking for a dedicated mobile/web developer or multimedia designer? Reach out to Yosef Begashaw directly.'}
               </p>
               <div className="flex flex-wrap items-center justify-center gap-3">
                 <a
@@ -277,7 +287,7 @@ export const ExperienceTimeline: React.FC<ExperienceTimelineProps> = ({ isDark }
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-cyan-400 to-teal-400 text-slate-950 hover:from-cyan-300 hover:to-teal-300 shadow-[0_0_20px_rgba(6,182,212,0.35)] transition-all font-display"
                 >
                   <Phone className="w-4 h-4" />
-                  <span>Direct Call: 0942572629</span>
+                  <span>{t.hero.callDirect}</span>
                 </a>
                 <a
                   href="#contact"
@@ -285,7 +295,7 @@ export const ExperienceTimeline: React.FC<ExperienceTimelineProps> = ({ isDark }
                     isDark ? 'border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/15' : 'border-cyan-300 text-slate-700 hover:bg-cyan-100'
                   }`}
                 >
-                  <span>Send a Message</span>
+                  <span>{t.nav.letsTalk}</span>
                   <ArrowUpRight className="w-4 h-4" />
                 </a>
               </div>

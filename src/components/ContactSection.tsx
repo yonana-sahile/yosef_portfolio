@@ -8,53 +8,46 @@ import {
   Check,
   Sparkles,
   CheckCircle2,
-  Phone,
-  GraduationCap,
-  Award,
-  MessageSquare
+  Phone
 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
-
-// Custom inline SVG for GitHub to resolve ReferenceError
-const GithubIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="w-3.5 h-3.5 text-cyan-400"
-    {...props}
-  >
-    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-    <path d="M9 18c-4.51 2-5-2-7-2" />
-  </svg>
-);
-
-// Custom inline SVG for LinkedIn to avoid missing export errors from lucide-react
-const LinkedinIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="w-3.5 h-3.5 text-cyan-400"
-    {...props}
-  >
-    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-    <rect x="2" y="9" width="4" height="12" />
-    <circle cx="4" cy="4" r="2" />
-  </svg>
-);
+import { TRANSLATIONS } from '../data/translations';
+import { useLanguage } from '../context/LanguageContext';
 
 interface ContactSectionProps {
   isDark: boolean;
 }
 
+const GithubIcon = ({ className = "w-3.5 h-3.5" }: { className?: string }) => (
+  <svg
+    className={className}
+    fill="currentColor"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+  >
+    <path
+      fillRule="evenodd"
+      d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
+
+const LinkedinIcon = ({ className = "w-3.5 h-3.5" }: { className?: string }) => (
+  <svg
+    className={className}
+    fill="currentColor"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+  >
+    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+  </svg>
+);
+
 export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
+  const { lang, isAmharic } = useLanguage();
+  const t = TRANSLATIONS[lang];
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -114,12 +107,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
     // Save locally to persist messages during demo
     setTimeout(() => {
       try {
-        const existing = JSON.parse(localStorage.getItem('yosef_messages') || '[]');
+        const existing = JSON.parse(localStorage.getItem('user_messages') || '[]');
         existing.push({
           ...formData,
           date: new Date().toISOString()
         });
-        localStorage.setItem('yosef_messages', JSON.stringify(existing));
+        localStorage.setItem('user_messages', JSON.stringify(existing));
       } catch {
         // Safe fallback
       }
@@ -137,17 +130,17 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
         <div className="text-center max-w-2xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.15)] mb-3">
             <Mail className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Connect &amp; Collaborate</span>
+            <span>{t.contact.badge}</span>
           </div>
           <h2 className={`font-display text-3xl sm:text-4xl font-extrabold tracking-tight ${
             isDark ? 'text-white' : 'text-slate-900'
           }`}>
-            Get in Touch with Yosef Begashaw
+            {t.contact.title}
           </h2>
           <p className={`mt-2 text-base sm:text-lg ${
             isDark ? 'text-slate-300' : 'text-slate-600'
           }`}>
-            Available for Mobile &amp; Web development projects, video editing, graphic design, and engineering collaborations.
+            {t.contact.subtitle}
           </p>
         </div>
 
@@ -163,7 +156,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
               <h3 className={`font-display text-xl font-bold mb-4 ${
                 isDark ? 'text-white' : 'text-slate-900'
               }`}>
-                Direct Contact Channels
+                {t.contact.directChannels}
               </h3>
 
               {/* Direct Phone Item */}
@@ -173,7 +166,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
                 <div className="overflow-hidden">
                   <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
                     <Phone className="w-3.5 h-3.5 text-cyan-400" />
-                    <span>Direct Phone / ጥሪ</span>
+                    <span>{t.contact.directPhone}</span>
                   </div>
                   <a
                     href={`tel:${PERSONAL_INFO.rawPhone}`}
@@ -182,7 +175,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
                     {PERSONAL_INFO.phone}
                   </a>
                   <div className="text-[11px] text-slate-400 font-mono">
-                    Local: {PERSONAL_INFO.rawPhone}
+                    {isAmharic ? 'የስልክ ቁጥር: ' : 'Local: '}{PERSONAL_INFO.rawPhone}
                   </div>
                 </div>
 
@@ -190,16 +183,16 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
                   <a
                     href={`tel:${PERSONAL_INFO.rawPhone}`}
                     className="p-2.5 rounded-xl border font-bold text-xs bg-cyan-400 text-slate-950 hover:bg-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.4)] transition-all cursor-pointer flex items-center gap-1"
-                    title="Call Now"
+                    title={isAmharic ? "አሁን ይደውሉ" : "Call Now"}
                   >
                     <Phone className="w-3.5 h-3.5" />
-                    <span className="hidden sm:inline">Call</span>
+                    <span className="hidden sm:inline">{isAmharic ? "ይደውሉ" : "Call"}</span>
                   </a>
 
                   <button
                     id="contact-copy-phone-btn"
                     onClick={handleCopyPhone}
-                    className={`p-2.5 rounded-xl border shrink-0 transition-all cursor-pointer backdrop-blur-xs ${
+                    className={`p-2.5 rounded-xl border shrink-0 transition-all cursor-pointer backdrop-blur-sm ${
                       copiedPhone
                         ? 'bg-cyan-400/20 border-cyan-400 text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.4)]'
                         : isDark
@@ -220,7 +213,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
                 <div className="overflow-hidden">
                   <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-cyan-400/80 flex items-center gap-1.5">
                     <Mail className="w-3.5 h-3.5 text-cyan-400" />
-                    <span>Primary Email</span>
+                    <span>{t.contact.primaryEmail}</span>
                   </div>
                   <a
                     href={`mailto:${PERSONAL_INFO.email}`}
@@ -233,7 +226,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
                 <button
                   id="contact-copy-email-btn"
                   onClick={handleCopyEmail}
-                  className={`p-2.5 rounded-xl border shrink-0 transition-all cursor-pointer backdrop-blur-xs ${
+                  className={`p-2.5 rounded-xl border shrink-0 transition-all cursor-pointer backdrop-blur-sm ${
                     copiedEmail
                       ? 'bg-cyan-400/20 border-cyan-400 text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.4)]'
                       : isDark
@@ -254,7 +247,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
                   <div className="flex items-center gap-2">
                     <MapPin className="w-4 h-4 text-cyan-400 shrink-0" />
                     <span className={`text-xs font-semibold ${isDark ? 'text-slate-200' : 'text-slate-700'}`}>
-                      Debre Berhan &amp; North Shoa, Ethiopia
+                      {isAmharic ? 'ደብረ ብርሃን እና ሰሜን ሸዋ፣ ኢትዮጵያ' : 'Debre Berhan & North Shoa, Ethiopia'}
                     </span>
                   </div>
                   <span className="text-[11px] px-2 py-0.5 rounded-md font-mono bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 font-bold">
@@ -265,7 +258,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
                 <div className="flex items-center justify-between pt-2 border-t border-cyan-500/15">
                   <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4 text-cyan-400 shrink-0 animate-pulse" />
-                    <span className="text-xs text-slate-400">Current Local Time:</span>
+                    <span className="text-xs text-slate-400">{t.contact.localTime}</span>
                   </div>
                   <span className="text-xs font-mono font-bold text-cyan-400">
                     {localTime || 'Loading...'}
@@ -276,13 +269,13 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
               {/* Status Pill */}
               <div className="mt-5 flex items-center gap-2 text-xs text-slate-400">
                 <Sparkles className="w-4 h-4 text-cyan-400 shrink-0" />
-                <span>Prompt responses via phone, SMS, and email.</span>
+                <span>{t.contact.promptResponse}</span>
               </div>
 
               {/* Online footprint */}
               <div className="mt-6 pt-6 border-t border-cyan-500/20">
                 <div className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400/80 mb-3">
-                  Online Footprint
+                  {t.contact.onlineFootprint}
                 </div>
                 <div className="flex items-center gap-3">
                   <a
@@ -309,7 +302,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
                         : 'bg-white border-cyan-200 text-slate-700 hover:bg-cyan-50'
                     }`}
                   >
-                    <LinkedinIcon />
+                    <LinkedinIcon className="w-3.5 h-3.5 text-cyan-400" />
                     <span>LinkedIn</span>
                   </a>
                 </div>
@@ -333,10 +326,10 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
                   <h3 className={`font-display text-2xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                    Message Received!
+                    {t.contact.successTitle}
                   </h3>
                   <p className={`text-sm max-w-md ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
-                    Thank you for reaching out to Yosef Begashaw. Your message has been saved and he will respond shortly.
+                    {t.contact.successDesc}
                   </p>
                   <button
                     onClick={() => {
@@ -351,7 +344,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
                     }}
                     className="mt-4 px-5 py-2.5 rounded-xl text-xs font-mono font-bold uppercase tracking-wider bg-cyan-400 text-slate-950 hover:bg-cyan-300 transition-all cursor-pointer shadow-xs"
                   >
-                    Send Another Message
+                    {t.contact.sendAnother}
                   </button>
                 </div>
               ) : (
@@ -360,15 +353,15 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
                     {/* Name */}
                     <div>
                       <label className="block text-xs font-mono font-bold uppercase tracking-wider text-cyan-400/90 mb-2">
-                        Your Name *
+                        {t.contact.formName} *
                       </label>
                       <input
                         type="text"
                         required
-                        placeholder="Abebe Kebede"
+                        placeholder={isAmharic ? "ሙሉ ስምዎ" : "Abebe Kebede"}
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className={`w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-hidden ${
+                        className={`w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-none ${
                           isDark
                             ? 'bg-slate-950/70 border-cyan-500/25 text-white placeholder-slate-500 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400'
                             : 'bg-white border-cyan-200 text-slate-900 placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500'
@@ -379,7 +372,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
                     {/* Email */}
                     <div>
                       <label className="block text-xs font-mono font-bold uppercase tracking-wider text-cyan-400/90 mb-2">
-                        Your Email *
+                        {t.contact.formEmail} *
                       </label>
                       <input
                         type="email"
@@ -387,7 +380,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
                         placeholder="you@example.com"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className={`w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-hidden ${
+                        className={`w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-none ${
                           isDark
                             ? 'bg-slate-950/70 border-cyan-500/25 text-white placeholder-slate-500 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400'
                             : 'bg-white border-cyan-200 text-slate-900 placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500'
@@ -400,14 +393,14 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
                     {/* Phone Number */}
                     <div>
                       <label className="block text-xs font-mono font-bold uppercase tracking-wider text-cyan-400/90 mb-2">
-                        Your Phone Number (Optional)
+                        {t.contact.formPhone}
                       </label>
                       <input
                         type="tel"
                         placeholder="09..."
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className={`w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-hidden ${
+                        className={`w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-none ${
                           isDark
                             ? 'bg-slate-950/70 border-cyan-500/25 text-white placeholder-slate-500 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400'
                             : 'bg-white border-cyan-200 text-slate-900 placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500'
@@ -418,31 +411,31 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
                     {/* Project Interest */}
                     <div>
                       <label className="block text-xs font-mono font-bold uppercase tracking-wider text-cyan-400/90 mb-2">
-                        Project Interest / Domain
+                        {t.contact.formProject}
                       </label>
                       <select
                         value={formData.projectType}
                         onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
-                        className={`w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-hidden cursor-pointer ${
+                        className={`w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-none cursor-pointer ${
                           isDark
                             ? 'bg-slate-950/90 border-cyan-500/25 text-white focus:border-cyan-400'
                             : 'bg-white border-cyan-200 text-slate-900 focus:border-cyan-500'
                         }`}
                       >
                         <option value="Mobile App Development (Flutter/React Native)">
-                          Mobile App Development (Flutter / React Native)
+                          {isAmharic ? "የሞባይል መተግበሪያ (Flutter / React Native)" : "Mobile App Development (Flutter / React Native)"}
                         </option>
                         <option value="Full-Stack Web Application (React/Node/Next)">
-                          Full-Stack Web Application (React / Node / Next)
+                          {isAmharic ? "የድረ-ገጽ ሲስተም (React / Node / Next)" : "Full-Stack Web Application (React / Node / Next)"}
                         </option>
                         <option value="Video Editing & Motion Graphics">
-                          Video Editing &amp; Motion Graphics
+                          {isAmharic ? "የቪዲዮ ኤዲቲንግ እና ሞሽን ግራፊክስ" : "Video Editing & Motion Graphics"}
                         </option>
                         <option value="Graphic Design & Visual Identity">
-                          Graphic Design &amp; Visual Identity
+                          {isAmharic ? "ግራፊክ ዲዛይን እና ቪዥዋል ብራንዲንግ" : "Graphic Design & Visual Identity"}
                         </option>
                         <option value="Academic Collaboration / Other">
-                          Academic Collaboration / Other
+                          {isAmharic ? "የትምህርት ትብብር / ሌላ" : "Academic Collaboration / Other"}
                         </option>
                       </select>
                     </div>
@@ -451,15 +444,15 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
                   {/* Message */}
                   <div>
                     <label className="block text-xs font-mono font-bold uppercase tracking-wider text-cyan-400/90 mb-2">
-                      Your Message *
+                      {t.contact.formMessage} *
                     </label>
                     <textarea
                       required
                       rows={5}
-                      placeholder="Describe your project, app idea, or opportunity..."
+                      placeholder={isAmharic ? "ስለ ፕሮጀክትዎ፣ የሞባይል/ዌብ አፕ ሃሳብዎ ወይም ስራዎ እዚህ ይግለጹ..." : "Describe your project, app idea, or opportunity..."}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className={`w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-hidden ${
+                      className={`w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-none ${
                         isDark
                           ? 'bg-slate-950/70 border-cyan-500/25 text-white placeholder-slate-500 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400'
                           : 'bg-white border-cyan-200 text-slate-900 placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500'
@@ -472,14 +465,14 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ isDark }) => {
                     type="submit"
                     id="contact-submit-btn"
                     disabled={isSubmitting}
-                    className="w-full py-4 rounded-xl font-display font-bold text-sm bg-gradient-to-r from-cyan-400 to-teal-400 text-slate-950 hover:from-cyan-300 hover:to-teal-300 shadow-[0_0_25px_rgba(6,182,212,0.4)] hover:shadow-[0_0_35px_rgba(6,182,212,0.6)] active:scale-98 transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
+                    className="w-full py-4 rounded-xl font-display font-bold text-sm bg-gradient-to-r from-cyan-400 to-teal-400 text-slate-950 hover:from-cyan-300 hover:to-teal-300 shadow-[0_0_25px_rgba(6,182,212,0.4)] hover:shadow-[0_0_35px_rgba(6,182,212,0.6)] active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
                   >
                     {isSubmitting ? (
-                      <span>Sending Message...</span>
+                      <span>{t.contact.formSending}</span>
                     ) : (
                       <>
                         <Send className="w-4 h-4" />
-                        <span>Send Message to Yosef Begashaw</span>
+                        <span>{t.contact.formSubmit}</span>
                       </>
                     )}
                   </button>
