@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ArrowRight,
   MapPin,
@@ -6,7 +6,14 @@ import {
   Copy,
   Phone,
   GraduationCap,
-  Award
+  Award,
+  Terminal,
+  Sparkles,
+  Code,
+  Laptop,
+  Video,
+  BookOpen,
+  UserCheck
 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 import { useLanguage } from '../context/LanguageContext';
@@ -20,22 +27,139 @@ interface HeroProps {
 export const Hero: React.FC<HeroProps> = ({ isDark }) => {
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [copiedPhone, setCopiedPhone] = useState(false);
-  const [userPhoto, setUserPhoto] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const { lang, isAmharic } = useLanguage();
   const t = TRANSLATIONS[lang];
 
-  // Load custom user photo from localStorage if set
-  useEffect(() => {
-    try {
-      const savedPhoto = localStorage.getItem('yosef_profile_photo');
-      if (savedPhoto) {
-        setUserPhoto(savedPhoto);
+  // Typewriter phrases with custom dynamic glowing colors and metadata
+  const typewriterPhrases = React.useMemo(() => {
+    return isAmharic ? [
+      {
+        text: "ዮሴፍ በጋሻው (Yosef Begashaw)",
+        role: "ሶፍትዌር ኢንጂነር / Software Engineer",
+        colorClass: "from-cyan-400 via-teal-300 to-cyan-400 text-cyan-400",
+        badgeBg: "bg-cyan-500/15 border-cyan-500/30 text-cyan-300",
+        glowColor: "rgba(6,182,212,0.35)",
+        cursorColor: "bg-cyan-400 shadow-[0_0_10px_#22d3ee]",
+        icon: "code"
+      },
+      {
+        text: "የኮምፒውተር ሳይንስ ተማሪ (Computer Science Student)",
+        role: "4ኛ ዓመት @ ደብረ ብርሃን ዩኒቨርሲቲ",
+        colorClass: "from-emerald-400 via-green-300 to-teal-400 text-emerald-400",
+        badgeBg: "bg-emerald-500/15 border-emerald-500/30 text-emerald-300",
+        glowColor: "rgba(16,185,129,0.35)",
+        cursorColor: "bg-emerald-400 shadow-[0_0_10px_#34d399]",
+        icon: "grad"
+      },
+      {
+        text: "የሞባይልና ዌብ አፕሊኬሽን አልሚ (Mobile & Web Dev)",
+        role: "Flutter · React · Next.js · Node.js",
+        colorClass: "from-blue-400 via-sky-300 to-indigo-400 text-blue-400",
+        badgeBg: "bg-blue-500/15 border-blue-500/30 text-blue-300",
+        glowColor: "rgba(59,130,246,0.35)",
+        cursorColor: "bg-blue-400 shadow-[0_0_10px_#60a5fa]",
+        icon: "mobile"
+      },
+      {
+        text: "የሂሳብ ዲፕሎማ ምሩቅ (Mathematics Diploma)",
+        role: "ጥልቅ የሂሳብና የአልጎሪዝም መሰረት",
+        colorClass: "from-amber-400 via-yellow-300 to-orange-400 text-amber-400",
+        badgeBg: "bg-amber-500/15 border-amber-500/30 text-amber-300",
+        glowColor: "rgba(245,158,11,0.35)",
+        cursorColor: "bg-amber-400 shadow-[0_0_10px_#fbbf24]",
+        icon: "math"
+      },
+      {
+        text: "ተሸላሚ የቪዲዮና መልቲሚዲያ ባለሙያ (Multimedia Editor)",
+        role: "የክብር የምስክር ወረቀት (Certified Editor)",
+        colorClass: "from-fuchsia-400 via-purple-300 to-pink-400 text-fuchsia-400",
+        badgeBg: "bg-fuchsia-500/15 border-fuchsia-500/30 text-fuchsia-300",
+        glowColor: "rgba(217,70,239,0.35)",
+        cursorColor: "bg-fuchsia-400 shadow-[0_0_10px_#e879f9]",
+        icon: "video"
       }
-    } catch {
-      // Safe fallback
-    }
-  }, []);
+    ] : [
+      {
+        text: "Yosef Begashaw",
+        role: "Software Engineer & Builder",
+        colorClass: "from-cyan-400 via-teal-300 to-cyan-400 text-cyan-400",
+        badgeBg: "bg-cyan-500/15 border-cyan-500/30 text-cyan-300",
+        glowColor: "rgba(6,182,212,0.35)",
+        cursorColor: "bg-cyan-400 shadow-[0_0_10px_#22d3ee]",
+        icon: "code"
+      },
+      {
+        text: "Computer Science Student",
+        role: "4th-Year Senior @ Debre Berhan University",
+        colorClass: "from-emerald-400 via-green-300 to-teal-400 text-emerald-400",
+        badgeBg: "bg-emerald-500/15 border-emerald-500/30 text-emerald-300",
+        glowColor: "rgba(16,185,129,0.35)",
+        cursorColor: "bg-emerald-400 shadow-[0_0_10px_#34d399]",
+        icon: "grad"
+      },
+      {
+        text: "Mobile & Web App Developer",
+        role: "Flutter · React · Next.js · Node.js",
+        colorClass: "from-blue-400 via-sky-300 to-indigo-400 text-blue-400",
+        badgeBg: "bg-blue-500/15 border-blue-500/30 text-blue-300",
+        glowColor: "rgba(59,130,246,0.35)",
+        cursorColor: "bg-blue-400 shadow-[0_0_10px_#60a5fa]",
+        icon: "mobile"
+      },
+      {
+        text: "Mathematics Diploma Graduate",
+        role: "Discrete Math & Logic Systems",
+        colorClass: "from-amber-400 via-yellow-300 to-orange-400 text-amber-400",
+        badgeBg: "bg-amber-500/15 border-amber-500/30 text-amber-300",
+        glowColor: "rgba(245,158,11,0.35)",
+        cursorColor: "bg-amber-400 shadow-[0_0_10px_#fbbf24]",
+        icon: "math"
+      },
+      {
+        text: "Certified Multimedia Editor",
+        role: "Awarded Video & Motion Graphics Reel",
+        colorClass: "from-fuchsia-400 via-purple-300 to-pink-400 text-fuchsia-400",
+        badgeBg: "bg-fuchsia-500/15 border-fuchsia-500/30 text-fuchsia-300",
+        glowColor: "rgba(217,70,239,0.35)",
+        cursorColor: "bg-fuchsia-400 shadow-[0_0_10px_#e879f9]",
+        icon: "video"
+      }
+    ];
+  }, [isAmharic]);
+
+  // Typewriter state management
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [currentText, setCurrentText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [typingSpeed, setTypingSpeed] = useState(80);
+
+  useEffect(() => {
+    const currentPhrase = typewriterPhrases[phraseIndex % typewriterPhrases.length].text;
+
+    const timer = setTimeout(() => {
+      if (!isDeleting) {
+        if (currentText.length < currentPhrase.length) {
+          setCurrentText(currentPhrase.substring(0, currentText.length + 1));
+          setTypingSpeed(75);
+        } else {
+          setTimeout(() => {
+            setIsDeleting(true);
+          }, 1900);
+        }
+      } else {
+        if (currentText.length > 0) {
+          setCurrentText(currentPhrase.substring(0, currentText.length - 1));
+          setTypingSpeed(38);
+        } else {
+          setIsDeleting(false);
+          setPhraseIndex((prev) => (prev + 1) % typewriterPhrases.length);
+          setTypingSpeed(80);
+        }
+      }
+    }, typingSpeed);
+
+    return () => clearTimeout(timer);
+  }, [currentText, isDeleting, phraseIndex, typingSpeed, typewriterPhrases]);
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(PERSONAL_INFO.email);
@@ -47,25 +171,6 @@ export const Hero: React.FC<HeroProps> = ({ isDark }) => {
     navigator.clipboard.writeText(PERSONAL_INFO.rawPhone);
     setCopiedPhone(true);
     setTimeout(() => setCopiedPhone(false), 2200);
-  };
-
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const result = event.target?.result as string;
-        if (result) {
-          setUserPhoto(result);
-          try {
-            localStorage.setItem('yosef_profile_photo', result);
-          } catch (err) {
-            console.warn('Could not cache photo to localStorage', err);
-          }
-        }
-      };
-      reader.readAsDataURL(file);
-    }
   };
 
   const scrollToSection = (id: string) => {
@@ -106,7 +211,7 @@ export const Hero: React.FC<HeroProps> = ({ isDark }) => {
             </div>
 
             {/* Main Greeting & Name */}
-            <h1 className="font-display font-extrabold tracking-tight text-4xl sm:text-5xl lg:text-6xl mb-3">
+            <h1 className="font-display font-extrabold tracking-tight text-4xl sm:text-5xl lg:text-6xl mb-4">
               <span className={isDark ? 'text-white' : 'text-slate-900'}>
                 {t.hero.greeting}{' '}
               </span>
@@ -114,14 +219,6 @@ export const Hero: React.FC<HeroProps> = ({ isDark }) => {
                 {isAmharic ? t.hero.name : PERSONAL_INFO.name}
               </span>
             </h1>
-
-            {/* Sub-Headline & Role */}
-            <h2 className={`text-lg sm:text-xl font-semibold mb-4 font-display flex flex-wrap items-center gap-2 ${
-              isDark ? 'text-cyan-300/90' : 'text-cyan-800'
-            }`}>
-              <span className="text-cyan-400 font-mono text-base">&gt;</span>
-              <span>{t.hero.headline}</span>
-            </h2>
 
             {/* Bio */}
             <p className={`text-base sm:text-lg leading-relaxed mb-6 max-w-2xl ${
@@ -243,41 +340,149 @@ export const Hero: React.FC<HeroProps> = ({ isDark }) => {
 
           </div>
 
-          {/* Right Column: Clean Visual Portrait with Hand Cursor & Professional Interactive Glow */}
+          {/* Right Column: Visual Portrait & Live Terminal */}
           <div className="lg:col-span-5 flex justify-center lg:justify-end">
-            <div className="relative w-full max-w-sm sm:max-w-md group cursor-pointer">
+            <div className="relative w-full max-w-sm sm:max-w-md">
 
-              {/* Outer decorative glowing cyan halo that amplifies on hover */}
-              <div className="absolute -inset-2 rounded-3xl bg-gradient-to-tr from-cyan-400/30 via-teal-400/20 to-cyan-300/30 blur-2xl -z-10 group-hover:blur-3xl group-hover:from-cyan-400/50 group-hover:to-teal-300/40 transition-all duration-500" />
+              {/* Outer decorative glowing cyan halo */}
+              <div className="absolute -inset-2 rounded-3xl bg-gradient-to-tr from-cyan-400/30 via-teal-400/20 to-cyan-300/30 blur-2xl -z-10" />
 
-              {/* Main Clean Card Container */}
-              <div className={`p-3 sm:p-4 rounded-3xl border backdrop-blur-xl shadow-2xl transition-all duration-500 ${
+              {/* Main Card Container */}
+              <div className={`p-4 sm:p-5 rounded-3xl border backdrop-blur-xl shadow-2xl transition-all ${
                 isDark
-                  ? 'bg-slate-900/70 border-cyan-500/30 group-hover:border-cyan-400/70 shadow-[0_0_35px_rgba(6,182,212,0.18)] group-hover:shadow-[0_0_55px_rgba(6,182,212,0.35)]'
-                  : 'bg-white/85 border-cyan-300/80 group-hover:border-cyan-400 shadow-[0_0_35px_rgba(6,182,212,0.12)] group-hover:shadow-[0_0_45px_rgba(6,182,212,0.25)]'
+                  ? 'bg-slate-900/70 border-cyan-500/30 shadow-[0_0_35px_rgba(6,182,212,0.18)]'
+                  : 'bg-white/85 border-cyan-300/80 shadow-[0_0_35px_rgba(6,182,212,0.12)]'
               }`}>
 
-                {/* Pure Photo Frame */}
-                <div className="relative aspect-square rounded-2xl overflow-hidden bg-slate-950 border-2 border-cyan-500/30 group-hover:border-cyan-400 transition-all duration-500 shadow-inner cursor-pointer">
+                {/* Decorative Top Header Bar */}
+                <div className="flex items-center justify-between mb-3 px-1">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)] animate-pulse" />
+                    <span className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400">
+                      {t.hero.photoFrameTitle}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Portrait Frame with Pointer Cursor */}
+                <div className="relative aspect-square rounded-2xl overflow-hidden bg-slate-950 border-2 border-cyan-500/40 group shadow-inner cursor-pointer">
                   <img
-                    src={userPhoto || defaultPortraitImg}
+                    src={defaultPortraitImg}
                     alt={isAmharic ? t.hero.name : PERSONAL_INFO.name}
-                    className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700 ease-out cursor-pointer"
+                    className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-500 cursor-pointer"
                     referrerPolicy="no-referrer"
                   />
 
-                  {/* Subtle Professional Hover Overlay with Ambient Glow */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-cyan-950/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                  {/* Overlay Gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
+
+                  {/* Photo details on bottom of image */}
+                  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white pointer-events-none">
+                    <div>
+                      <div className="text-sm font-bold font-display flex items-center gap-1.5 drop-shadow-md">
+                        <span>{isAmharic ? t.hero.name : PERSONAL_INFO.name}</span>
+                        <UserCheck className="w-3.5 h-3.5 text-cyan-400" />
+                      </div>
+                      <div className="text-[11px] font-mono text-cyan-300/90 drop-shadow-xs">
+                        {t.hero.photoCaption}
+                      </div>
+                    </div>
+
+                    <div className="px-2 py-0.5 rounded-full bg-cyan-500/30 border border-cyan-400/50 text-[10px] font-mono font-semibold text-cyan-200 backdrop-blur-xs">
+                      {t.hero.photoFrameActive}
+                    </div>
+                  </div>
                 </div>
 
-                {/* Hidden Input for direct background file loading if needed */}
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handlePhotoUpload}
-                  accept="image/*"
-                  className="hidden"
-                />
+                {/* Animated Typewriter Console Under Photo */}
+                <div
+                  className={`mt-4 p-3.5 rounded-2xl border transition-all duration-500 relative overflow-hidden backdrop-blur-md ${
+                    isDark
+                      ? 'bg-slate-950/80 border-cyan-500/30 shadow-[0_0_25px_rgba(6,182,212,0.15)]'
+                      : 'bg-slate-900/95 border-cyan-400/40 shadow-[0_0_25px_rgba(6,182,212,0.12)]'
+                  }`}
+                  style={{
+                    borderColor: typewriterPhrases[phraseIndex % typewriterPhrases.length].glowColor
+                  }}
+                >
+                  {/* Subtle top indicator bar */}
+                  <div className="flex items-center justify-between gap-2 pb-2 mb-2.5 border-b border-slate-800/80">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-red-400/80" />
+                      <span className="w-2 h-2 rounded-full bg-yellow-400/80" />
+                      <span className="w-2 h-2 rounded-full bg-emerald-400/80" />
+                      <span className="ml-1.5 text-[10px] font-mono font-bold tracking-wider text-slate-400 uppercase flex items-center gap-1">
+                        <Terminal className="w-3 h-3 text-cyan-400" />
+                        <span>Live Bio / የዮሴፍ መገለጫ</span>
+                      </span>
+                    </div>
+
+                    {/* Progress Indicator Dots */}
+                    <div className="flex items-center gap-1">
+                      {typewriterPhrases.map((_, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => {
+                            setPhraseIndex(idx);
+                            setCurrentText('');
+                            setIsDeleting(false);
+                          }}
+                          className={`h-1.5 rounded-full transition-all cursor-pointer ${
+                            (phraseIndex % typewriterPhrases.length) === idx
+                              ? 'w-4 bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]'
+                              : 'w-1.5 bg-slate-700 hover:bg-slate-500'
+                          }`}
+                          title={`Switch to slide ${idx + 1}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Live Typewriter Output Area */}
+                  <div className="min-h-[52px] flex flex-col justify-center">
+                    <div className="flex items-baseline gap-1.5 flex-wrap">
+                      <span className="text-cyan-400 font-mono font-bold text-xs shrink-0 select-none">
+                        &gt;
+                      </span>
+
+                      {/* Animated Typed Text */}
+                      <span
+                        className={`font-display font-extrabold text-sm sm:text-base tracking-tight bg-gradient-to-r bg-clip-text text-transparent drop-shadow-sm transition-colors duration-300 ${
+                          typewriterPhrases[phraseIndex % typewriterPhrases.length].colorClass
+                        }`}
+                      >
+                        {currentText || '\u00A0'}
+                      </span>
+
+                      {/* Blinking Cursor */}
+                      <span
+                        className={`inline-block w-2 h-4 sm:h-5 rounded-xs animate-pulse align-middle shrink-0 ml-0.5 ${
+                          typewriterPhrases[phraseIndex % typewriterPhrases.length].cursorColor
+                        }`}
+                      />
+                    </div>
+
+                    {/* Subtitle Role / Institution Badge */}
+                    <div className="mt-1.5 flex items-center gap-1.5">
+                      <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-mono font-semibold border transition-all duration-300 ${
+                        typewriterPhrases[phraseIndex % typewriterPhrases.length].badgeBg
+                      }`}>
+                        {(() => {
+                          const iconType = typewriterPhrases[phraseIndex % typewriterPhrases.length].icon;
+                          if (iconType === 'code') return <Code className="w-3 h-3 shrink-0" />;
+                          if (iconType === 'grad') return <GraduationCap className="w-3 h-3 shrink-0" />;
+                          if (iconType === 'mobile') return <Laptop className="w-3 h-3 shrink-0" />;
+                          if (iconType === 'math') return <BookOpen className="w-3 h-3 shrink-0" />;
+                          if (iconType === 'video') return <Video className="w-3 h-3 shrink-0" />;
+                          return <Sparkles className="w-3 h-3 shrink-0" />;
+                        })()}
+                        <span className="truncate">
+                          {typewriterPhrases[phraseIndex % typewriterPhrases.length].role}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
               </div>
             </div>
