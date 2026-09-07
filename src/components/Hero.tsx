@@ -6,7 +6,6 @@ import {
   Copy,
   Phone,
   GraduationCap,
-  Award,
   Terminal,
   Sparkles,
   Code,
@@ -221,34 +220,11 @@ export const Hero: React.FC<HeroProps> = ({ isDark }) => {
             </h1>
 
             {/* Bio */}
-            <p className={`text-base sm:text-lg leading-relaxed mb-6 max-w-2xl ${
+            <p className={`text-base sm:text-lg leading-relaxed mb-7 max-w-2xl ${
               isDark ? 'text-slate-300/90' : 'text-slate-700'
             }`}>
               {t.hero.bio}
             </p>
-
-            {/* Location & Academic Origin Pill */}
-            <div className="flex flex-wrap items-center gap-y-2 gap-x-3 text-xs sm:text-sm mb-7 font-mono">
-              <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-300">
-                <GraduationCap className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                <span>{t.hero.universityTag}</span>
-              </div>
-
-              <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-300">
-                <MapPin className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                <span>{t.hero.originTag}</span>
-              </div>
-
-              <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/25 text-emerald-400">
-                <Award className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                <span>{t.hero.rewardTag}</span>
-              </div>
-
-              <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/25 text-amber-300">
-                <span>∑</span>
-                <span>{t.hero.mathTag}</span>
-              </div>
-            </div>
 
             {/* Action Buttons */}
             <div className="flex flex-wrap items-center gap-3 mb-6 w-full sm:w-auto">
