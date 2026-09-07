@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ExternalLink, Github, ArrowUpRight, Sparkles, Filter, Layers } from 'lucide-react';
+import { ExternalLink, GithubIcon, ArrowUpRight, Sparkles, Filter, Layers } from 'lucide-react';
 import { Project } from '../types';
 import { PROJECTS } from '../data/portfolioData';
 import { ProjectModal } from './ProjectModal';

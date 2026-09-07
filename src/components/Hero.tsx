@@ -16,7 +16,7 @@ import {
   UserCheck
 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
-import defaultPortraitImg from '../assets/images/yosef_begashawu_portrait_1788810504121.jpg';
+import defaultPortraitImg from '../assets/yosef_begashaw.jpg';
 
 interface HeroProps {
   isDark: boolean;

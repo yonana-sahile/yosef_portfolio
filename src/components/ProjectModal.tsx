@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, ExternalLink, Github, CheckCircle2, Cpu, BarChart3, Layers } from 'lucide-react';
+import { X, ExternalLink,  CheckCircle2, GithubIcon,Cpu, BarChart3, Layers } from 'lucide-react';
 import { Project } from '../types';
 
 interface ProjectModalProps {

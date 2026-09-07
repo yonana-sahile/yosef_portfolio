@@ -7,7 +7,7 @@ import {
   Copy,
   Check,
   Sparkles,
-  Github,
+GithubIcon,
   Linkedin,
   CheckCircle2,
   Phone,
