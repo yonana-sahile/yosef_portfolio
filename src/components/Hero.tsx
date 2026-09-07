@@ -1,19 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ArrowRight,
-  Send,
   MapPin,
-  Sparkles,
   Check,
   Copy,
   Phone,
-  Mail,
   GraduationCap,
-  Award,
-  Camera,
-  Upload,
-  RefreshCw,
-  UserCheck
+  Award
 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 import defaultPortraitImg from '../assets/yosef_begashaw.jpg';
@@ -26,9 +19,8 @@ export const Hero: React.FC<HeroProps> = ({ isDark }) => {
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [copiedPhone, setCopiedPhone] = useState(false);
   const [userPhoto, setUserPhoto] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Load custom user photo from localStorage if set
+  // Load custom user photo from localStorage if available
   useEffect(() => {
     try {
       const savedPhoto = localStorage.getItem('yosef_profile_photo');
@@ -50,37 +42,6 @@ export const Hero: React.FC<HeroProps> = ({ isDark }) => {
     navigator.clipboard.writeText(PERSONAL_INFO.rawPhone);
     setCopiedPhone(true);
     setTimeout(() => setCopiedPhone(false), 2200);
-  };
-
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const result = event.target?.result as string;
-        if (result) {
-          setUserPhoto(result);
-          try {
-            localStorage.setItem('yosef_profile_photo', result);
-          } catch (err) {
-            console.warn('Could not cache photo to localStorage', err);
-          }
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleResetPhoto = () => {
-    setUserPhoto(null);
-    try {
-      localStorage.removeItem('yosef_profile_photo');
-    } catch {
-      // Safe fallback
-    }
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
   };
 
   const scrollToSection = (id: string) => {
@@ -255,120 +216,28 @@ export const Hero: React.FC<HeroProps> = ({ isDark }) => {
 
           </div>
 
-          {/* Right Column: Visual Portrait & Photo Placeholder with Live Upload */}
+          {/* Right Column: Interactive Hover Portrait Frame */}
           <div className="lg:col-span-5 flex justify-center lg:justify-end">
-            <div className="relative w-full max-w-sm sm:max-w-md">
+            <div className="relative w-full max-w-sm sm:max-w-md group cursor-pointer">
 
-              {/* Outer decorative glowing cyan halo */}
-              <div className="absolute -inset-2 rounded-3xl bg-gradient-to-tr from-cyan-400/30 via-teal-400/20 to-cyan-300/30 blur-2xl -z-10" />
+              {/* Outer decorative glowing cyan halo - gets stronger on hover */}
+              <div className="absolute -inset-2 rounded-3xl bg-gradient-to-tr from-cyan-400/30 via-teal-400/20 to-cyan-300/30 blur-2xl -z-10 group-hover:from-cyan-400/60 group-hover:to-teal-300/50 group-hover:blur-3xl transition-all duration-500" />
 
-              {/* Main Transparent Card Container */}
-              <div className={`p-4 sm:p-5 rounded-3xl border backdrop-blur-xl shadow-2xl transition-all ${
+              {/* Main Container - Moves forward (-translate-y-2 & scale-102) on hover */}
+              <div className={`p-3 sm:p-4 rounded-3xl border backdrop-blur-xl shadow-2xl transform transition-all duration-500 group-hover:-translate-y-2 group-hover:scale-[1.02] ${
                 isDark
-                  ? 'bg-slate-900/70 border-cyan-500/30 shadow-[0_0_35px_rgba(6,182,212,0.18)]'
-                  : 'bg-white/85 border-cyan-300/80 shadow-[0_0_35px_rgba(6,182,212,0.12)]'
+                  ? 'bg-slate-900/70 border-cyan-500/30 shadow-[0_0_35px_rgba(6,182,212,0.18)] group-hover:border-cyan-400 group-hover:shadow-[0_0_50px_rgba(6,182,212,0.4)]'
+                  : 'bg-white/85 border-cyan-300/80 shadow-[0_0_35px_rgba(6,182,212,0.12)] group-hover:border-cyan-400 group-hover:shadow-[0_0_40px_rgba(6,182,212,0.3)]'
               }`}>
 
-                {/* Decorative Top Glowing Header Bar */}
-                <div className="flex items-center justify-between mb-3 px-1">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)] animate-pulse" />
-                    <span className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400">
-                      Personal Photo Frame
-                    </span>
-                  </div>
-
-                  {userPhoto && (
-                    <button
-                      onClick={handleResetPhoto}
-                      className="text-[11px] font-mono text-slate-400 hover:text-cyan-300 flex items-center gap-1 cursor-pointer"
-                      title="Reset to default photo"
-                    >
-                      <RefreshCw className="w-3 h-3" />
-                      <span>Reset</span>
-                    </button>
-                  )}
-                </div>
-
-                {/* Portrait Frame */}
-                <div className="relative aspect-square rounded-2xl overflow-hidden bg-slate-950 border-2 border-cyan-500/40 group shadow-inner">
+                {/* Portrait Frame - Image zooms slightly inside the frame on hover */}
+                <div className="relative aspect-square rounded-2xl overflow-hidden bg-slate-950 border-2 border-cyan-500/40 group-hover:border-cyan-400 transition-colors duration-500 shadow-inner">
                   <img
                     src={userPhoto || defaultPortraitImg}
-                    alt="Yosef Begashaw"
-                    className="w-full h-full object-cover object-center transform group-hover:scale-103 transition-transform duration-500"
+                    alt="Personal Portrait"
+                    className="w-full h-full object-cover object-center transform transition-transform duration-700 ease-out group-hover:scale-108"
                     referrerPolicy="no-referrer"
                   />
-
-                  {/* Overlay Gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
-
-                  {/* Photo details on bottom of image */}
-                  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white pointer-events-none">
-                    <div>
-                      <div className="text-sm font-bold font-display flex items-center gap-1.5 drop-shadow-md">
-                        <span>{PERSONAL_INFO.name}</span>
-                        <UserCheck className="w-3.5 h-3.5 text-cyan-400" />
-                      </div>
-                      <div className="text-[11px] font-mono text-cyan-300/90 drop-shadow-xs">
-                        DBU 4th Year Computer Science
-                      </div>
-                    </div>
-
-                    <div className="px-2 py-0.5 rounded-full bg-cyan-500/30 border border-cyan-400/50 text-[10px] font-mono font-semibold text-cyan-200 backdrop-blur-xs">
-                      Active
-                    </div>
-                  </div>
-
-                  {/* Click to Upload overlay button on hover */}
-                  <div
-                    onClick={() => fileInputRef.current?.click()}
-                    className="absolute inset-0 bg-slate-950/60 backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer text-white"
-                  >
-                    <div className="w-12 h-12 rounded-full bg-cyan-500/20 border border-cyan-400 flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.5)]">
-                      <Camera className="w-6 h-6 text-cyan-300" />
-                    </div>
-                    <span className="text-xs font-semibold text-cyan-200">
-                      {userPhoto ? 'Change Photo' : 'Upload Your Photo'}
-                    </span>
-                    <span className="text-[10px] text-slate-300">Click or tap to select JPG/PNG</span>
-                  </div>
-                </div>
-
-                {/* Hidden File Input for uploading custom photo */}
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handlePhotoUpload}
-                  accept="image/*"
-                  className="hidden"
-                />
-
-                {/* Dedicated Photo Upload & Customization Control */}
-                <div className="mt-3.5 pt-3 border-t border-cyan-500/20 flex items-center justify-between gap-2">
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="flex-1 py-2 px-3 rounded-xl text-xs font-semibold font-mono flex items-center justify-center gap-2 bg-cyan-500/15 border border-cyan-500/35 text-cyan-300 hover:bg-cyan-500/25 hover:border-cyan-400 transition-all cursor-pointer shadow-xs"
-                  >
-                    <Upload className="w-3.5 h-3.5" />
-                    <span>{userPhoto ? 'Update My Photo' : 'Upload My Personal Photo'}</span>
-                  </button>
-
-                  {userPhoto && (
-                    <button
-                      onClick={handleResetPhoto}
-                      className="p-2 rounded-xl text-xs border border-slate-700 bg-slate-800/50 text-slate-300 hover:text-red-400 hover:border-red-500/40 transition-colors cursor-pointer"
-                      title="Clear custom photo"
-                    >
-                      <RefreshCw className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                </div>
-
-                {/* Status Notice */}
-                <div className="mt-2 text-center text-[11px] text-slate-400 font-mono">
-                  {userPhoto
-                    ? '✓ Personal photo saved & active'
-                    : 'Personal photo placeholder ready — click above to set your photo'}
                 </div>
 
               </div>
