@@ -1,3 +1,4 @@
+
 {
   "name": "portfolio_frontend",
   "private": true,
@@ -8,7 +9,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc --noEmit && vite build",
     "lint": "oxlint",
     "preview": "vite preview"
   },
@@ -28,3 +29,4 @@
     "vite": "^8.2.2"
   }
 }
+
