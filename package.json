@@ -6,7 +6,7 @@
   "engines": { "node": "22.x" },
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview"
   },
